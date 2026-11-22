@@ -2,11 +2,11 @@
 <html lang="tr" data-theme="dark">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0b1110">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0a111d">
 <title>Yönetim Paneli | Gül Konakları</title>
 <link rel="icon" type="image/svg+xml" href="/gul-konaklari-logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--bg:#0b1110;--side:#0f1715;--panel:#141d1a;--panel2:#1b2622;--panel3:#22302b;--ink:#edf1ee;--muted:#a3afa8;--line:#2a3732;--gold:#d9bb80;--gold-ink:#14201b;--bad:#f0877c;--good:#6fd0a3;--warn:#f0c674;--info:#8ec5e8}
@@ -25,10 +25,11 @@ dialog{background:var(--panel);color:var(--ink);border:1px solid var(--line);bor
 @media(max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}}@media(max-width:820px){.shell{grid-template-columns:minmax(0,1fr)}.side{position:fixed;left:0;top:0;width:260px;transform:translateX(-100%);transition:transform .18s}.side.open{transform:none;box-shadow:0 0 40px #000}.menu{display:inline-flex}.topbar{padding:0 12px}.content{padding:14px 12px 32px}.who{display:none}.formgrid,.dlg .body{grid-template-columns:1fr}.field.wide{grid-column:auto}.popbody{right:auto;left:0}}
 @media print{.tabulator-print-fullscreen,.tabulator-print-table{background:#fff!important;color:#000!important}.tabulator-print-table th,.tabulator-print-table td{color:#000!important;border:1px solid #999;padding:3px 5px}}
 </style>
+<link rel="stylesheet" href="/panel-theme.css">
 </head>
-<body>
-<div id="login" class="login hidden"><form class="loginbox" id="login-form"><img src="/gul-konaklari-logo.svg" alt="" width="46" height="46"><h1>Yönetim Paneli</h1><label class="field">E-posta<input id="email" type="email" autocomplete="username" required></label><label class="field">Şifre<input id="password" type="password" autocomplete="current-password" required></label><button class="btn pri">Giriş yap</button><div class="err" id="login-err" role="alert"></div><a href="/" class="empty">Siteye dön</a></form></div>
-<div id="shell" class="shell hidden"><aside class="side" id="side"><a class="brand" href="/" title="Siteyi aç"><img src="/gul-konaklari-logo.svg" alt=""><span><b>Gül Konakları</b><small>Yönetim Paneli</small></span></a><nav id="nav" aria-label="Modüller"></nav></aside>
+<body class="gk-panel gk-admin">
+<div id="login" class="login hidden"><div class="loginpage"><header class="loginhead"><div class="brand"><span class="mark">G</span><span><b>GÜL KONAKLARI</b><small>Sancaktepe · İstanbul</small></span></div><a class="btn" href="/">← Ana sayfa</a></header><form class="loginbox" id="login-form"><div class="eyebrow">Güvenli yönetim erişimi</div><h1>Hesabınıza giriş yapın</h1><p class="lead">Yetkili yönetim kullanıcıları için.</p><label class="field">E-posta adresi<input id="email" type="email" autocomplete="username" placeholder="ornek@eposta.com" required></label><label class="field">Şifre<input id="password" type="password" autocomplete="current-password" placeholder="Şifreniz" required></label><div class="err" id="login-err" role="alert"></div><button class="btn pri">Giriş yap →</button><div class="notice">Yönetim yetkileri site yöneticisi tarafından tanımlanır. Erişiminiz yoksa site yönetimiyle iletişime geçin.</div></form></div></div>
+<div id="shell" class="shell hidden"><aside class="side" id="side"><a class="brand" href="/" title="Siteyi aç"><span class="mark">G</span><span><b>GÜL KONAKLARI</b><small>Yönetim paneli</small></span></a><nav id="nav" aria-label="Modüller"></nav></aside>
 <div class="main"><div class="topbar"><button class="btn menu" id="menu" aria-label="Menüyü aç">☰</button><h1 id="title"></h1><span class="sp"></span><span class="who" id="who"></span><a class="btn sm" href="/" target="_blank" rel="noopener">Siteyi gör</a><button class="btn sm" id="logout">Çıkış</button></div><main class="content" id="content"></main></div></div>
 <dialog id="dialog"></dialog><div id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>

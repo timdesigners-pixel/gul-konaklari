@@ -6,7 +6,7 @@
 <title>Muhasebe | Gül Konakları</title>
 <link rel="icon" type="image/svg+xml" href="/gul-konaklari-logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5f3ee;--panel:#fff;--panel2:#efece4;--ink:#18231f;--muted:#5f6a63;--line:#e0dcd1;--gold:#8d6f37;--accent:#173a30;--accent-ink:#fff;--bad:#b3362b;--good:#21744f}
 :root[data-theme=dark]{--bg:#0b1110;--panel:#141d1a;--panel2:#1b2622;--ink:#edf1ee;--muted:#a3afa8;--line:#2a3732;--gold:#d9bb80;--accent:#d9bb80;--accent-ink:#14201b;--bad:#f0877c;--good:#6fd0a3}
@@ -25,9 +25,10 @@ main{padding:24px 0 60px}h1{font:600 28px 'Playfair Display',serif;margin:0 0 4p
 .login{max-width:400px;margin:8vh auto}.login .field{margin-bottom:12px}.login input{width:100%}.hidden{display:none!important}.line{display:grid;grid-template-columns:minmax(0,1fr) 130px 130px 36px;gap:8px;margin-bottom:8px}.line select{width:100%}.line input{width:100%;text-align:right}progress{width:100%;height:10px}
 @media(max-width:800px){.stats{grid-template-columns:1fr 1fr}.brand small{display:none}.line{grid-template-columns:1fr 1fr 36px}.line select{grid-column:1/-1}}
 </style>
+<link rel="stylesheet" href="/panel-theme.css">
 </head>
-<body>
-<header><div class="wrap"><div class="head"><a class="brand" href="/"><img src="/gul-konaklari-logo.svg" alt=""><span><b>Gül Konakları</b><small>Muhasebe yönetimi</small></span></a><div class="actions"><button class="btn alt small" id="theme">Tema</button><button class="btn alt small hidden" id="logout">Çıkış</button></div></div>
+<body class="gk-panel gk-ledger">
+<header><div class="wrap"><div class="head"><a class="brand" href="/"><span class="mark">G</span><span><b>GÜL KONAKLARI</b><small>Muhasebe yönetimi</small></span></a><div class="actions"><button class="btn alt small" id="theme">Tema</button><button class="btn alt small hidden" id="logout">Çıkış</button></div></div>
 <nav id="tabs" class="hidden" role="tablist"></nav></div></header>
 <main class="wrap">
 <section id="login" class="card login hidden"><h1>Yönetici girişi</h1><p class="lead">Muhasebe kayıtları yalnızca yetkili hesaplara açıktır.</p><form id="login-form"><label class="field">E-posta<input id="email" type="email" autocomplete="username" required></label><label class="field">Şifre<input id="password" type="password" autocomplete="current-password" required></label><button class="btn">Giriş yap</button></form><div class="status" id="login-status" role="status"></div></section>
