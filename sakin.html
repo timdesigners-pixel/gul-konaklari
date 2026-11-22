@@ -105,14 +105,19 @@ td.num,th.num{text-align:right;white-space:nowrap}
 
     <div class="tiles">
       <div class="card tile"><small>Hesap bakiyesi</small><b id="t-balance">—</b><span id="t-balance-note"></span></div>
-      <div class="card tile"><small>Ödenmemiş aidat</small><b id="t-open">—</b><span id="t-open-note"></span></div>
-      <div class="card tile"><small>Son ödeme</small><b id="t-last">—</b><span id="t-last-note"></span></div>
+      <div class="card tile"><small id="t-open-label">Ödenmemiş aidat</small><b id="t-open">—</b><span id="t-open-note"></span></div>
+      <div class="card tile"><small id="t-last-label">Son ödeme</small><b id="t-last">—</b><span id="t-last-note"></span></div>
+    </div>
+
+    <div class="card statement"><div class="statement-head"><div><div class="kicker">Kişisel finans</div><h2>Hesap ekstresi</h2><p class="sub" id="st-sub">Adınıza açılmış hesabın tüm hareketleri.</p></div><div class="statement-actions"><button class="ghost" id="st-csv" type="button">CSV indir</button><button class="ghost" id="st-print" type="button">Yazdır</button></div></div>
+      <div class="statement-filters"><div><label for="st-account">Hesap</label><select id="st-account"></select></div><div><label for="st-from">Başlangıç</label><input id="st-from" type="date"></div><div><label for="st-to">Bitiş</label><input id="st-to" type="date"></div></div>
+      <div id="statement-box"></div>
     </div>
 
     <div class="grid2">
       <div class="stack">
-        <div class="card"><h2>Aidatlar</h2><p class="sub">Dairenize tahakkuk eden aidat ve diğer borçlar.</p><div id="dues-box"></div></div>
-        <div class="card"><h2>Ödemeler</h2><p class="sub">Dairenize ait ödeme kayıtları.</p><div id="payments-box"></div></div>
+        <div class="card" id="dues-card"><h2>Aidatlar</h2><p class="sub">Dairenize tahakkuk eden aidat ve diğer borçlar.</p><div id="dues-box"></div></div>
+        <div class="card" id="payments-card"><h2>Ödemeler</h2><p class="sub">Dairenize ait ödeme kayıtları.</p><div id="payments-box"></div></div>
         <div class="card"><h2>Yönetim kararları</h2><p class="sub">Yayımlanan yönetim ve kurul kararları.</p><div id="decisions-box"></div></div>
       </div>
       <div class="stack">
@@ -150,7 +155,13 @@ const fdate=d=>d?new Date(d).toLocaleDateString('tr-TR',{day:'2-digit',month:'lo
 const fperiod=d=>d?new Date(d).toLocaleDateString('tr-TR',{month:'long',year:'numeric'}):'—';
 const REL={owner:'Malik',tenant:'Kiracı',resident:'Sakin'};
 const PAY={pending:['Bekliyor','pending'],paid:['Ödendi','paid'],failed:['Başarısız','open'],cancelled:['İptal',''],refunded:['İade edildi','']};
-let me=null,apartments=[],currentApt=null;
+let me=null,apartments=[],currentApt=null,myAccounts=[],statementRows=[],statementToken=0;
+const plain=n=>new Intl.NumberFormat('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(Math.round(Number(n||0)*100)/100+0);
+const shortDate=d=>d?d.split('-').reverse().join('.'):'';
+const accountsOf=a=>myAccounts.filter(x=>x.apartment===`${a.block}/${a.apartment_no}`);
+function paintStatementAccounts(a){const list=accountsOf(a),sel=$('st-account');sel.innerHTML=list.map(x=>`<option value="${x.account_id}">${esc(x.account_name)}</option>`).join('');$('st-from').value=$('st-to').value='';const has=list.length>0;['st-csv','st-print','st-account','st-from','st-to'].forEach(i=>$(i).disabled=!has);if(!has){statementRows=[];$('st-sub').textContent='Bu dairede adınıza açılmış bir hesap bulunmuyor.';$('statement-box').innerHTML='<div class="empty">Ekstreler yalnızca hesap sahibine gösterilir. Bilgi için site yönetimiyle iletişime geçin.</div>';return}$('st-sub').textContent='Adınıza açılmış hesabın tüm hareketleri.';loadStatement()}
+async function loadStatement(){const token=++statementToken,account=$('st-account').value;$('statement-box').innerHTML='<div class="empty">Ekstre yükleniyor…</div>';const rows=[];for(let from=0;;from+=1000){const {data,error}=await sb.rpc('my_statement',{p_account:account,p_from:$('st-from').value||null,p_to:$('st-to').value||null}).range(from,from+999);if(token!==statementToken)return;if(error){$('statement-box').innerHTML='<div class="empty">Ekstre yüklenemedi. Lütfen tekrar deneyin.</div>';return}rows.push(...data);if(data.length<1000)break}statementRows=rows;const debit=rows.reduce((s,r)=>s+Math.round(Number(r.debit)*100),0)/100,credit=rows.reduce((s,r)=>s+Math.round(Number(r.credit)*100),0)/100,last=rows.at(-1)?.running_balance??0;$('statement-box').innerHTML=rows.length?`<div class="tablewrap"><table class="statement-table"><thead><tr><th>Tarih</th><th>Fiş</th><th>Hareket</th><th>Açıklama</th><th class="num">Borç</th><th class="num">Alacak</th><th class="num">Bakiye</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(shortDate(r.entry_date))}</td><td>${esc(r.journal_no)}</td><td>${esc(r.movement)}</td><td class="wrapcell">${esc(r.description)}</td><td class="num">${plain(r.debit)}</td><td class="num">${plain(r.credit)}</td><td class="num ${Number(r.running_balance)>0?'debt':Number(r.running_balance)<0?'credit':''}">${plain(r.running_balance)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="4">${rows.length} hareket</td><td class="num">${plain(debit)}</td><td class="num">${plain(credit)}</td><td class="num">${plain(last)}</td></tr></tfoot></table></div>`:'<div class="empty">Seçilen aralıkta hareket bulunmuyor.</div>'}
+function statementCsv(){const name=$('st-account').selectedOptions[0]?.text||'hesap',q=v=>{let s=String(v??'');if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'},n=v=>Number(v||0).toFixed(2).replace('.',','),body=[['Tarih','Fiş','Hareket','Açıklama','Borç','Alacak','Bakiye'].map(q).join(';'),...statementRows.map(r=>[q(shortDate(r.entry_date)),q(r.journal_no),q(r.movement),q(r.description),n(r.debit),n(r.credit),n(r.running_balance)].join(';'))].join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+body],{type:'text/csv;charset=utf-8'}));a.download='ekstre-'+name.replace(/[^\p{L}\p{N}]+/gu,'-').toLocaleLowerCase('tr')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
 
 (function theme(){const root=document.documentElement;let saved='dark';try{saved=localStorage.getItem('gul-konaklari-theme')||'dark'}catch(e){}root.dataset.theme=saved==='light'?'light':'dark';const btn=$('theme-toggle');function paint(){const light=root.dataset.theme==='light';btn.textContent=light?'☾ Koyu tema':'☼ Açık tema';const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=light?'#f5f3ee':'#0b1110'}paint();btn.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem('gul-konaklari-theme',root.dataset.theme)}catch(e){}paint()})})();
 
@@ -164,10 +175,11 @@ async function enter(user){
   ]);
   const isResident=(roles||[]).some(r=>r.role==='resident');
   if(mErr||(!isResident&&!(mems||[]).length)){
-    await sb.auth.signOut();show('login-view');
-    setStatus('login-status','Bu hesap sakin portalına tanımlı değil. Yönetici hesapları için ana sayfadaki yönetim panelini kullanın.','err');return;
+    show('login-view');
+    setStatus('login-status','Bu hesap bir daireye bağlı değil. Yönetici hesapları için Yönetim Paneli kullanılmalıdır.','err');return;
   }
   me=user;
+  const {data:accs}=await sb.rpc('my_ledger_accounts');myAccounts=accs||[];
   apartments=(mems||[]).filter(m=>m.apartments).sort((a,b)=>(b.is_primary-a.is_primary)).map(m=>({...m.apartments,relation:m.relation}));
   const {data:prof}=await sb.from('profiles').select('full_name,phone').eq('user_id',user.id).maybeSingle();
   $('hello-name').textContent=prof?.full_name||user.user_metadata?.full_name||'Sayın sakinimiz';
@@ -180,7 +192,7 @@ async function enter(user){
   loadNotifications();loadDecisions();
   if(apartments.length){selectApt(apartments[0].id)}else{
     $('hello-apt').textContent='Hesabınıza henüz bir daire bağlanmamış. Lütfen site yönetimiyle iletişime geçin.';
-    ['dues-box','payments-box'].forEach(b=>$(b).innerHTML='<div class="empty">Daire bağlantısı bekleniyor.</div>');
+    ['dues-box','payments-box','statement-box'].forEach(b=>$(b).innerHTML='<div class="empty">Daire bağlantısı bekleniyor.</div>');
   }
 }
 
@@ -200,6 +212,18 @@ async function selectApt(id){
   const openTotal=dues.reduce((s,d)=>s+openOf(d),0);
   const openCount=dues.filter(d=>openOf(d)>0).length;
 
+  $('dues-card').classList.toggle('hidden',!dues.length);$('payments-card').classList.toggle('hidden',!pays.length);
+  paintStatementAccounts(a);
+  const ledger=accountsOf(a);
+  if(ledger.length){
+    const sum=k=>ledger.reduce((s,x)=>s+Math.round(Number(x[k])*100),0)/100,bal=sum('balance'),lastDate=ledger.map(x=>x.last_entry).filter(Boolean).sort().at(-1);
+    $('t-balance').textContent=money(Math.abs(bal));$('t-balance').className=bal>0?'debt':bal<0?'credit':'';
+    $('t-balance-note').textContent=(bal>0?'Borç':bal<0?'Alacak':'Hesap kapalı')+(lastDate?' · son hareket '+shortDate(lastDate):'');
+    $('t-open-label').textContent='Toplam borç hareketi';$('t-open').textContent=money(sum('debit'));$('t-open').className='';$('t-open-note').textContent=`${ledger.length} hesap`;
+    $('t-last-label').textContent='Toplam alacak hareketi';$('t-last').textContent=money(sum('credit'));$('t-last-note').textContent='Tahsilat ve mahsuplar';
+    return renderLists(dues,pays,openOf);
+  }
+  $('t-open-label').textContent='Ödenmemiş aidat';$('t-last-label').textContent='Son ödeme';
   if(balances.length){
     const total=balances.reduce((s,b)=>s+Number(b.opening_balance),0);
     $('t-balance').textContent=money(Math.abs(total));
@@ -211,7 +235,10 @@ async function selectApt(id){
   const lastPaid=pays.find(p=>p.status==='paid');
   $('t-last').textContent=lastPaid?money(lastPaid.amount):'—';
   $('t-last-note').textContent=lastPaid?fdate(lastPaid.paid_at||lastPaid.created_at):'Henüz ödeme kaydı yok';
+  renderLists(dues,pays,openOf);
+}
 
+function renderLists(dues,pays,openOf){
   $('dues-box').innerHTML=dues.length?`<div class="tablewrap"><table><thead><tr><th>Dönem</th><th>Açıklama</th><th>Son ödeme</th><th class="num">Tutar</th><th class="num">Ödenen</th><th class="num">Kalan</th><th>Durum</th></tr></thead><tbody>${dues.map(d=>{const t=Number(d.principal_amount)+Number(d.late_fee_amount),o=openOf(d);return`<tr><td>${esc(fperiod(d.period))}</td><td>${esc(d.description)}${Number(d.late_fee_amount)>0?`<br><small style="color:var(--muted)">Gecikme: ${money(d.late_fee_amount)}</small>`:''}</td><td>${esc(fdate(d.due_date))}</td><td class="num">${money(t)}</td><td class="num">${money(d.paid_amount)}</td><td class="num">${money(o)}</td><td><span class="pill ${o>0?'open':'paid'}">${o>0?'Ödenmedi':'Ödendi'}</span></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">Bu daire için henüz aidat kaydı bulunmuyor.</div>';
 
   $('payments-box').innerHTML=pays.length?`<div class="tablewrap"><table><thead><tr><th>Tarih</th><th class="num">Tutar</th><th>Durum</th></tr></thead><tbody>${pays.map(p=>{const [l,c]=PAY[p.status]||[p.status,''];return`<tr><td>${esc(fdate(p.paid_at||p.created_at))}</td><td class="num">${money(p.amount)}</td><td><span class="pill ${c}">${esc(l)}</span></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">Bu daire için henüz ödeme kaydı bulunmuyor.</div>';
@@ -231,6 +258,8 @@ async function loadDecisions(){
 }
 
 $('apt-select').addEventListener('change',e=>selectApt(e.target.value));
+['st-account','st-from','st-to'].forEach(i=>$(i).addEventListener('change',loadStatement));
+$('st-csv').addEventListener('click',statementCsv);$('st-print').addEventListener('click',()=>window.print());
 
 $('login-form').addEventListener('submit',async e=>{
   e.preventDefault();const btn=$('login-btn');btn.disabled=true;setStatus('login-status','Giriş yapılıyor…');
