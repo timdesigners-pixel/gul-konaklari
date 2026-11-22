@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1110"><link rel="icon" type="image/svg+xml" href="/gul-konaklari-logo.svg"><link rel="apple-touch-icon" href="/gul-konaklari-logo.svg">
+<meta name="description" content="Gül Konakları sakin portalı — aidat, ödeme, bildirim ve yönetim kararları.">
+<meta name="robots" content="noindex">
+<title>Sakin Portalı | Gül Konakları</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0b1110;--ink:#e8eee9;--muted:#a4b2aa;--green:#173a30;--green2:#1d493a;--gold:#c6a66b;--gold-ink:#e6d4ae;--line:#2b3b34;--panel:#101a17;--panel2:#14221d;--field:#0b1310;--fieldline:#34453b;--nav:#0b1110ed;--danger:#e58b7c;--ok:#8fcfa4;--shadow:0 18px 55px #0008}
+:root[data-theme="light"]{color-scheme:light;--bg:#f5f3ee;--ink:#18231f;--muted:#68736c;--green:#173a30;--green2:#173a30;--gold:#c6a66b;--gold-ink:#8e7449;--line:#e3e0d7;--panel:#fff;--panel2:#f4f1e9;--field:#fff;--fieldline:#d6d0c4;--nav:#f5f3eeef;--danger:#b4442f;--ok:#2d7a4a;--shadow:0 18px 55px #14251b14}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1100px,calc(100% - 32px));margin:auto}
+.nav{position:sticky;top:0;z-index:20;background:var(--nav);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.navin{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:8px 0}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{width:46px;height:46px;flex:0 0 46px}.mark img{width:100%;height:100%;display:block;object-fit:contain}
+.brand b{display:block;font-family:'Playfair Display';font-size:19px}
+.brand small{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.navbtns{display:flex;gap:8px;flex-wrap:wrap}
+.btn,.ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:5px;padding:11px 15px;font:700 13px 'DM Sans',sans-serif;cursor:pointer;border:1px solid transparent;white-space:nowrap;transition:.2s}
+.btn{background:var(--green2);color:#fff}.btn:hover{background:#285747}
+.btn[disabled]{opacity:.6;cursor:wait}
+.ghost{background:transparent;color:var(--ink);border-color:var(--line)}.ghost:hover{border-color:var(--gold);color:var(--gold-ink)}
+.kicker{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:700}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600}
+main{padding:44px 0 70px}
+.hidden{display:none!important}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px;box-shadow:var(--shadow);min-width:0}
+.login{max-width:440px;margin:30px auto}
+.login h1{font-size:32px;margin:10px 0 8px}
+.login p{color:var(--muted);line-height:1.7;font-size:14px;margin:0 0 20px}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px}
+input{width:100%;padding:12px 13px;border-radius:6px;border:1px solid var(--fieldline);background:var(--field);color:var(--ink);font:15px 'DM Sans',sans-serif}
+input:focus{outline:2px solid #c6a66b66;border-color:var(--gold)}
+.login .btn{width:100%;margin-top:20px;padding:14px}
+.status{font-size:13px;margin-top:12px;min-height:18px;color:var(--gold-ink);line-height:1.5}
+.status.err{color:var(--danger)}.status.ok{color:var(--ok)}
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.hello h1{font-size:clamp(28px,5vw,40px);margin:8px 0 4px}
+.hello p{margin:0;color:var(--muted)}
+select{padding:11px 12px;border-radius:6px;border:1px solid var(--fieldline);background:var(--field);color:var(--ink);font:600 14px 'DM Sans',sans-serif;max-width:100%}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.tile small{display:block;color:var(--muted);font-size:12px;font-weight:600}
+.tile b{display:block;font:600 28px 'Playfair Display',serif;margin:8px 0 4px;overflow-wrap:anywhere}
+.tile span{font-size:12px;color:var(--muted)}
+.debt{color:var(--danger)}.credit{color:var(--ok)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px;align-items:start}
+.stack{display:grid;gap:18px;min-width:0}
+.card h2{font-size:22px;margin:0 0 4px}
+.card .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.tablewrap{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+th{text-align:left;color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:9px 6px;border-bottom:1px solid var(--line)}
+td{padding:11px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;white-space:nowrap}
+.pill{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--muted)}
+.pill.paid{color:var(--ok)}.pill.open{color:var(--danger)}.pill.pending{color:var(--gold-ink)}
+.empty{color:var(--muted);font-size:13px;padding:14px;border:1px dashed var(--line);border-radius:8px;text-align:center}
+.note{border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:10px}
+.note.unread{border-color:var(--gold)}
+.note h3{font:700 14px 'DM Sans',sans-serif;margin:0 0 6px}
+.note p{margin:0;color:var(--muted);font-size:13px;line-height:1.6;white-space:pre-line}
+.note .meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:var(--muted)}
+.linkbtn{background:none;border:0;color:var(--gold-ink);font:700 12px 'DM Sans',sans-serif;cursor:pointer;padding:0}
+.decision{padding:12px 0;border-bottom:1px solid var(--line)}.decision:last-child{border-bottom:0}
+.decision h3{font:700 14px 'DM Sans',sans-serif;margin:0 0 4px}
+.decision small{color:var(--gold-ink);font-size:11px;font-weight:700}
+.decision p{color:var(--muted);font-size:13px;line-height:1.6;margin:6px 0 0;white-space:pre-line}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card .btn{margin-top:16px}
+.foot{color:var(--muted);font-size:12px;text-align:center;padding:24px 0 40px}
+@media(max-width:860px){.grid2{grid-template-columns:minmax(0,1fr)}.tiles{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media(max-width:560px){.wrap{width:calc(100% - 32px)}.tiles,.formrow{grid-template-columns:minmax(0,1fr)}.brand b{font-size:16px}.brand small{font-size:8px;letter-spacing:1px}.mark{width:38px;height:38px;flex-basis:38px}.navbtns{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.navbtns>*{padding:10px 6px;font-size:12px}.card{padding:18px}main{padding:28px 0 50px}.hello select{width:100%}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap navin"><a class="brand" href="/"><span class="mark"><img src="/gul-konaklari-logo.svg" alt="Gül Konakları logosu"></span><span><b>Gül Konakları</b><small>Sakin portalı</small></span></a><div class="navbtns"><button class="ghost" id="theme-toggle" type="button">☼ Açık tema</button><a class="ghost" href="/">Ana sayfa</a><button class="ghost hidden" id="logout-btn" type="button">Çıkış yap</button></div></div></header>
+
+<main class="wrap">
+  <section id="loading" class="login card"><p>Oturum kontrol ediliyor…</p></section>
+
+  <section id="login-view" class="login card hidden">
+    <div class="kicker">Gül Konakları</div>
+    <h1>Sakin girişi</h1>
+    <p>Dairenize ait aidat, ödeme ve bildirimleri görmek için yönetimin size verdiği hesapla giriş yapın.</p>
+    <form id="login-form">
+      <label for="login-email">E-posta</label><input id="login-email" type="email" autocomplete="username" required>
+      <label for="login-password">Şifre</label><input id="login-password" type="password" autocomplete="current-password" required>
+      <button class="btn" id="login-btn" type="submit">Giriş yap</button>
+    </form>
+    <div class="status" id="login-status"></div>
+    <p style="margin:16px 0 0;font-size:12px">Hesabınız yoksa veya şifrenizi unuttuysanız site yönetimiyle iletişime geçin.</p>
+  </section>
+
+  <section id="app-view" class="hidden">
+    <div class="hello">
+      <div><div class="kicker">Hoş geldiniz</div><h1 id="hello-name">Sakin</h1><p id="hello-apt"></p></div>
+      <select id="apt-select" class="hidden" aria-label="Daire seçimi"></select>
+    </div>
+
+    <div class="tiles">
+      <div class="card tile"><small>Hesap bakiyesi</small><b id="t-balance">—</b><span id="t-balance-note"></span></div>
+      <div class="card tile"><small>Ödenmemiş aidat</small><b id="t-open">—</b><span id="t-open-note"></span></div>
+      <div class="card tile"><small>Son ödeme</small><b id="t-last">—</b><span id="t-last-note"></span></div>
+    </div>
+
+    <div class="grid2">
+      <div class="stack">
+        <div class="card"><h2>Aidatlar</h2><p class="sub">Dairenize tahakkuk eden aidat ve diğer borçlar.</p><div id="dues-box"></div></div>
+        <div class="card"><h2>Ödemeler</h2><p class="sub">Dairenize ait ödeme kayıtları.</p><div id="payments-box"></div></div>
+        <div class="card"><h2>Yönetim kararları</h2><p class="sub">Yayımlanan yönetim ve kurul kararları.</p><div id="decisions-box"></div></div>
+      </div>
+      <div class="stack">
+        <div class="card"><h2>Bildirimler</h2><p class="sub" id="notif-sub">Yönetimden size gelen mesajlar.</p><div id="notif-box"></div></div>
+        <div class="card"><h2>Profilim</h2><p class="sub" id="profile-email"></p>
+          <form id="profile-form">
+            <label for="p-name">Ad soyad</label><input id="p-name" autocomplete="name">
+            <label for="p-phone">Telefon</label><input id="p-phone" type="tel" autocomplete="tel" placeholder="05xx xxx xx xx">
+            <button class="btn" type="submit">Bilgilerimi kaydet</button>
+          </form>
+          <div class="status" id="profile-status"></div>
+        </div>
+        <div class="card"><h2>Şifre değiştir</h2>
+          <form id="password-form">
+            <div class="formrow"><div><label for="pw1">Yeni şifre</label><input id="pw1" type="password" autocomplete="new-password" minlength="8"></div><div><label for="pw2">Yeni şifre (tekrar)</label><input id="pw2" type="password" autocomplete="new-password" minlength="8"></div></div>
+            <button class="btn" type="submit">Şifreyi güncelle</button>
+          </form>
+          <div class="status" id="password-status"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="foot">© 2026 Gül Konakları Sitesi · Fatih Mah. Okul Sok. No:5, Sancaktepe / İstanbul</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
+<script>
+const SUPABASE_URL='https://btyqnudxqlbebndxfjgl.supabase.co';
+const SUPABASE_KEY='sb_publishable_JRKSFPqA3ecU3zVknp4kDw_BhP2nL6L';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY'}).format(Number(n)||0);
+const fdate=d=>d?new Date(d).toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'}):'—';
+const fperiod=d=>d?new Date(d).toLocaleDateString('tr-TR',{month:'long',year:'numeric'}):'—';
+const REL={owner:'Malik',tenant:'Kiracı',resident:'Sakin'};
+const PAY={pending:['Bekliyor','pending'],paid:['Ödendi','paid'],failed:['Başarısız','open'],cancelled:['İptal',''],refunded:['İade edildi','']};
+let me=null,apartments=[],currentApt=null;
+
+(function theme(){const root=document.documentElement;let saved='dark';try{saved=localStorage.getItem('gul-konaklari-theme')||'dark'}catch(e){}root.dataset.theme=saved==='light'?'light':'dark';const btn=$('theme-toggle');function paint(){const light=root.dataset.theme==='light';btn.textContent=light?'☾ Koyu tema':'☼ Açık tema';const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=light?'#f5f3ee':'#0b1110'}paint();btn.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem('gul-konaklari-theme',root.dataset.theme)}catch(e){}paint()})})();
+
+function show(view){['loading','login-view','app-view'].forEach(v=>$(v).classList.toggle('hidden',v!==view));$('logout-btn').classList.toggle('hidden',view!=='app-view')}
+function setStatus(id,msg,kind){const el=$(id);el.textContent=msg||'';el.className='status'+(kind?' '+kind:'')}
+
+async function enter(user){
+  const [{data:roles},{data:mems,error:mErr}]=await Promise.all([
+    sb.from('user_roles').select('role').eq('user_id',user.id).is('revoked_at',null),
+    sb.from('apartment_memberships').select('relation,is_primary,apartments(id,block,apartment_no,floor,door_label)').eq('user_id',user.id)
+  ]);
+  const isResident=(roles||[]).some(r=>r.role==='resident');
+  if(mErr||(!isResident&&!(mems||[]).length)){
+    await sb.auth.signOut();show('login-view');
+    setStatus('login-status','Bu hesap sakin portalına tanımlı değil. Yönetici hesapları için ana sayfadaki yönetim panelini kullanın.','err');return;
+  }
+  me=user;
+  apartments=(mems||[]).filter(m=>m.apartments).sort((a,b)=>(b.is_primary-a.is_primary)).map(m=>({...m.apartments,relation:m.relation}));
+  const {data:prof}=await sb.from('profiles').select('full_name,phone').eq('user_id',user.id).maybeSingle();
+  $('hello-name').textContent=prof?.full_name||user.user_metadata?.full_name||'Sayın sakinimiz';
+  $('p-name').value=prof?.full_name||'';$('p-phone').value=prof?.phone||'';
+  $('profile-email').textContent=user.email;
+  const sel=$('apt-select');
+  sel.innerHTML=apartments.map(a=>`<option value="${a.id}">${esc(a.block)} Blok · Daire ${esc(a.apartment_no)}</option>`).join('');
+  sel.classList.toggle('hidden',apartments.length<2);
+  show('app-view');
+  loadNotifications();loadDecisions();
+  if(apartments.length){selectApt(apartments[0].id)}else{
+    $('hello-apt').textContent='Hesabınıza henüz bir daire bağlanmamış. Lütfen site yönetimiyle iletişime geçin.';
+    ['dues-box','payments-box'].forEach(b=>$(b).innerHTML='<div class="empty">Daire bağlantısı bekleniyor.</div>');
+  }
+}
+
+async function selectApt(id){
+  currentApt=apartments.find(a=>a.id===id);if(!currentApt)return;
+  const a=currentApt;
+  $('hello-apt').textContent=`${a.block} Blok · Daire ${a.apartment_no}${a.floor?' · '+a.floor+'. kat':''} · ${REL[a.relation]||'Sakin'}`;
+  ['dues-box','payments-box'].forEach(b=>$(b).innerHTML='<div class="empty">Yükleniyor…</div>');
+  const [ob,du,pa]=await Promise.all([
+    sb.from('opening_balances').select('opening_balance,balance_as_of,project_name').eq('apartment_id',id).order('balance_as_of',{ascending:false}),
+    sb.from('dues').select('period,description,principal_amount,late_fee_amount,paid_amount,due_date').eq('apartment_id',id).order('period',{ascending:false}),
+    sb.from('payments').select('amount,status,paid_at,created_at,provider').eq('apartment_id',id).order('created_at',{ascending:false})
+  ]);
+  if(currentApt.id!==id)return;
+  const dues=du.data||[],pays=pa.data||[],balances=ob.data||[];
+  const openOf=d=>Math.max(0,Number(d.principal_amount)+Number(d.late_fee_amount)-Number(d.paid_amount));
+  const openTotal=dues.reduce((s,d)=>s+openOf(d),0);
+  const openCount=dues.filter(d=>openOf(d)>0).length;
+
+  if(balances.length){
+    const total=balances.reduce((s,b)=>s+Number(b.opening_balance),0);
+    $('t-balance').textContent=money(Math.abs(total));
+    $('t-balance').className=total<0?'debt':total>0?'credit':'';
+    $('t-balance-note').textContent=(total<0?'Borç':total>0?'Alacak':'Hesap kapalı')+' · '+fdate(balances[0].balance_as_of)+' itibarıyla';
+  }else{$('t-balance').textContent='—';$('t-balance').className='';$('t-balance-note').textContent='Henüz bakiye kaydı yok'}
+  $('t-open').textContent=money(openTotal);$('t-open').className=openTotal>0?'debt':'';
+  $('t-open-note').textContent=openCount?`${openCount} kalem ödeme bekliyor`:'Ödenmemiş aidat yok';
+  const lastPaid=pays.find(p=>p.status==='paid');
+  $('t-last').textContent=lastPaid?money(lastPaid.amount):'—';
+  $('t-last-note').textContent=lastPaid?fdate(lastPaid.paid_at||lastPaid.created_at):'Henüz ödeme kaydı yok';
+
+  $('dues-box').innerHTML=dues.length?`<div class="tablewrap"><table><thead><tr><th>Dönem</th><th>Açıklama</th><th>Son ödeme</th><th class="num">Tutar</th><th class="num">Ödenen</th><th class="num">Kalan</th><th>Durum</th></tr></thead><tbody>${dues.map(d=>{const t=Number(d.principal_amount)+Number(d.late_fee_amount),o=openOf(d);return`<tr><td>${esc(fperiod(d.period))}</td><td>${esc(d.description)}${Number(d.late_fee_amount)>0?`<br><small style="color:var(--muted)">Gecikme: ${money(d.late_fee_amount)}</small>`:''}</td><td>${esc(fdate(d.due_date))}</td><td class="num">${money(t)}</td><td class="num">${money(d.paid_amount)}</td><td class="num">${money(o)}</td><td><span class="pill ${o>0?'open':'paid'}">${o>0?'Ödenmedi':'Ödendi'}</span></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">Bu daire için henüz aidat kaydı bulunmuyor.</div>';
+
+  $('payments-box').innerHTML=pays.length?`<div class="tablewrap"><table><thead><tr><th>Tarih</th><th class="num">Tutar</th><th>Durum</th></tr></thead><tbody>${pays.map(p=>{const [l,c]=PAY[p.status]||[p.status,''];return`<tr><td>${esc(fdate(p.paid_at||p.created_at))}</td><td class="num">${money(p.amount)}</td><td><span class="pill ${c}">${esc(l)}</span></td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty">Bu daire için henüz ödeme kaydı bulunmuyor.</div>';
+}
+
+async function loadNotifications(){
+  const {data}=await sb.from('resident_notifications').select('id,subject,body,read_at,created_at').eq('user_id',me.id).order('created_at',{ascending:false}).limit(30);
+  const list=data||[];const unread=list.filter(n=>!n.read_at).length;
+  $('notif-sub').textContent=unread?`${unread} okunmamış bildiriminiz var.`:'Yönetimden size gelen mesajlar.';
+  $('notif-box').innerHTML=list.length?list.map(n=>`<div class="note ${n.read_at?'':'unread'}"><h3>${esc(n.subject)}</h3><p>${esc(n.body)}</p><div class="meta"><span>${esc(fdate(n.created_at))}</span>${n.read_at?'<span>Okundu</span>':`<button class="linkbtn" data-read="${n.id}">Okundu işaretle</button>`}</div></div>`).join(''):'<div class="empty">Henüz bildiriminiz yok.</div>';
+}
+$('notif-box').addEventListener('click',async e=>{const id=e.target.dataset.read;if(!id)return;e.target.disabled=true;await sb.from('resident_notifications').update({read_at:new Date().toISOString()}).eq('id',id).eq('user_id',me.id);loadNotifications()});
+
+async function loadDecisions(){
+  const {data}=await sb.from('decisions').select('title,body,decision_date,meeting_type').eq('status','published').order('decision_date',{ascending:false}).limit(20);
+  $('decisions-box').innerHTML=(data||[]).length?data.map(d=>`<div class="decision"><small>${esc(fdate(d.decision_date))}${d.meeting_type?' · '+esc(d.meeting_type):''}</small><h3>${esc(d.title)}</h3><p>${esc(d.body)}</p></div>`).join(''):'<div class="empty">Yayımlanmış karar bulunmuyor.</div>';
+}
+
+$('apt-select').addEventListener('change',e=>selectApt(e.target.value));
+
+$('login-form').addEventListener('submit',async e=>{
+  e.preventDefault();const btn=$('login-btn');btn.disabled=true;setStatus('login-status','Giriş yapılıyor…');
+  const {data,error}=await sb.auth.signInWithPassword({email:$('login-email').value.trim(),password:$('login-password').value});
+  btn.disabled=false;
+  if(error){setStatus('login-status',error.message==='Invalid login credentials'?'E-posta veya şifre hatalı.':'Giriş yapılamadı: '+error.message,'err');return}
+  setStatus('login-status','');$('login-password').value='';await enter(data.user);
+});
+
+$('logout-btn').addEventListener('click',async()=>{await sb.auth.signOut();me=null;apartments=[];show('login-view');setStatus('login-status','Oturumunuz kapatıldı.','ok')});
+
+$('profile-form').addEventListener('submit',async e=>{
+  e.preventDefault();setStatus('profile-status','Kaydediliyor…');
+  const full_name=$('p-name').value.trim(),phone=$('p-phone').value.trim()||null;
+  const {error}=await sb.from('profiles').update({full_name,phone,updated_at:new Date().toISOString()}).eq('user_id',me.id);
+  if(error){setStatus('profile-status','Kaydedilemedi: '+error.message,'err');return}
+  if(full_name)$('hello-name').textContent=full_name;
+  setStatus('profile-status','Bilgileriniz kaydedildi.','ok');
+});
+
+$('password-form').addEventListener('submit',async e=>{
+  e.preventDefault();const p1=$('pw1').value,p2=$('pw2').value;
+  if(p1.length<8){setStatus('password-status','Şifre en az 8 karakter olmalı.','err');return}
+  if(p1!==p2){setStatus('password-status','Şifreler birbiriyle aynı değil.','err');return}
+  setStatus('password-status','Güncelleniyor…');
+  const {error}=await sb.auth.updateUser({password:p1});
+  if(error){setStatus('password-status','Şifre güncellenemedi: '+error.message,'err');return}
+  $('pw1').value=$('pw2').value='';setStatus('password-status','Şifreniz güncellendi.','ok');
+});
+
+(async()=>{const {data:{session}}=await sb.auth.getSession();if(session?.user){await enter(session.user)}else{show('login-view')}})();
+</script>
+</body>
+</html>
